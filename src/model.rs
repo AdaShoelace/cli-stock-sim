@@ -103,7 +103,7 @@ impl Update<Msg> for Model {
                         .is_ok());
                     None
                 }
-                Msg::Activate(view) => {
+                Msg::ChangeActivity(view) => {
                     self.current_component = view;
                     assert!(self.app.active(&view).is_ok());
                     None

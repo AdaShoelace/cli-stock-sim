@@ -73,19 +73,11 @@ impl Component<Msg, NoUserEvent> for MainMenu {
             Event::Keyboard(KeyEvent {
                 code: Key::Enter, ..
             }) => {
-                /*if let Some(AttrValue::Payload(PropPayload::One(PropValue::Usize(value)))) =
-                    self.query(Attribute::Value)
-                {
-                    match value {
-                        0 => return Some(Msg::AppClose),
-                        _ => {}
-                    }
-                }*/
                 if let State::One(StateValue::Usize(value)) =
                     self.state()
                 {
                     match value {
-                        0 => return Some(Msg::Activate(Id::StockOverview)),
+                        0 => return Some(Msg::ChangeActivity(Id::StockOverview)),
                         1 => return Some(Msg::AppClose),
                         _ => {}
                     }

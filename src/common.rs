@@ -5,7 +5,7 @@
 pub enum Msg {
     AppClose,
     ButtonPressed(isize),
-    Activate(Id),
+    ChangeActivity(Id),
     None,
 }
 

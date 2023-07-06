@@ -1,16 +1,21 @@
+mod activity_manager;
+mod activities;
 mod common;
+mod context;
 mod components;
 mod model;
 mod util;
 
 // Crate imports
-use crate::{common::*, model::Model};
+use crate::{activity_manager::{NextActivity, ActivityManager}, common::*, model::Model};
 
 // Third party imports
+use anyhow::Result;
 use tuirealm::{AttrValue, Attribute, PollStrategy, Update};
 
-fn main() {
-    let mut model = Model::default();
+fn main() -> Result<()> {
+    util::init_logging()?;
+    /*let mut model = Model::default();
 
     let _ = model.terminal.enter_alternate_screen();
     let _ = model.terminal.enable_raw_mode();
@@ -44,7 +49,13 @@ fn main() {
             model.redraw = false;
         }
     }
+
     let _ = model.terminal.leave_alternate_screen();
     let _ = model.terminal.disable_raw_mode();
     let _ = model.terminal.clear_screen();
+    */
+
+    let mut manager = ActivityManager::new();
+    manager.run(NextActivity::MainMenu);
+    Ok(())
 }
