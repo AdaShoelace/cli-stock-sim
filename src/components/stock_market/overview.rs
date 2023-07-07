@@ -93,8 +93,11 @@ impl Component<Msg, NoUserEvent> for Overview {
                 code: Key::Up,
                 modifiers: KeyModifiers::SHIFT,
             }) => self.perform(Cmd::Scroll(Direction::Up)),
-            Event::Keyboard(KeyEvent { code: Key::Esc, .. }) => return Some(Msg::AppClose),
-            Event::Keyboard(KeyEvent { code: Key::Backspace, .. }) => return Some(Msg::ChangeActivity(Id::MainMenu)),
+            Event::Keyboard(KeyEvent { code: Key::Esc, .. })
+            | Event::Keyboard(KeyEvent {
+                code: Key::Backspace,
+                ..
+            }) => return Some(Msg::ChangeActivity(Id::MainMenu)),
             _ => CmdResult::None,
         };
         Some(Msg::None)

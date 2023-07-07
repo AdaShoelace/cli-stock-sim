@@ -1,8 +1,10 @@
 mod main_menu;
+mod stock_overview;
 
 // Crate imports
 use super::context::Context;
-pub use main_menu::MainMenu;
+pub use self::{main_menu::MainMenu, stock_overview::StockOverview};
+
 
 // Third party imports
 use strum::{Display, EnumString};

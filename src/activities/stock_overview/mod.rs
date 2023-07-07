@@ -1,7 +1,6 @@
 mod update;
 mod view;
 
-// Crate imports
 use super::{Activity, Context, ExitReason};
 use crate::{Id, Msg};
 
@@ -13,14 +12,14 @@ use std::time::Duration;
 use log::{debug, error, info};
 use tuirealm::{Application, EventListenerCfg, NoUserEvent, PollStrategy, Update};
 
-pub struct MainMenu {
+pub struct StockOverview {
     app: Application<Id, Msg, NoUserEvent>,
     exit_reason: Option<ExitReason>,
     context: Option<Context>,
     redraw: bool,
 }
 
-impl MainMenu {
+impl StockOverview {
     pub fn new(ticks: Duration) -> Self {
         Self {
             app: Application::init(
@@ -40,7 +39,7 @@ impl MainMenu {
     }
 }
 
-impl Activity for MainMenu {
+impl Activity for StockOverview {
     fn on_create(&mut self, context: Context) {
         info!("Initializing activity: MainMenu");
 
@@ -95,9 +94,9 @@ impl Activity for MainMenu {
 
     fn on_destroy(&mut self) -> Option<Context> {
         // Disable raw mode
-        /*if let Err(err) = self.context_mut().terminal().disable_raw_mode() {
+        if let Err(err) = self.context_mut().terminal().disable_raw_mode() {
             error!("Failed to disable raw mode: {}", err);
-        }*/
+        }
         if let Err(err) = self.context_mut().terminal().clear_screen() {
             error!("Failed to clear screen: {}", err);
         }

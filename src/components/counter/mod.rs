@@ -34,6 +34,7 @@ pub struct Counter {
     states: CounterState,
 }
 
+#[allow(dead_code)]
 impl Counter {
     pub fn label<S>(mut self, label: S) -> Self
     where

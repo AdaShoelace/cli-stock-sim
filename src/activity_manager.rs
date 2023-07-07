@@ -1,5 +1,5 @@
 // Crate imports
-use crate::{activities::{Activity, ExitReason, MainMenu}, context::Context};
+use crate::{activities::{Activity, ExitReason, MainMenu, StockOverview}, context::Context};
 
 // Std imports
 use std::time::Duration;
@@ -60,6 +60,11 @@ impl ActivityManager {
                         result = None;
                         break;
                     }
+                    ExitReason::EnterStockOverview => {
+                        info!("Leaving MainMenu for StockOverview due to: {}", exit_reason);
+                        result = Some(NextActivity::StockOverview);
+                        break;
+                    }
                     _ => {}
                 }
             }
@@ -70,6 +75,40 @@ impl ActivityManager {
     }
 
     fn run_stock_overview(&mut self) -> Option<NextActivity> {
-        unimplemented!()
+        let mut activity = StockOverview::new(Duration::from_millis(20));
+        
+        let mut result: Option<NextActivity>;
+        
+        let ctx = match self.context.take() {
+            Some(ctx) => ctx,
+            None => {
+                error!("Failed to initialize StockOverview activity: context is None");
+                return None
+            }
+        };
+
+        activity.on_create(ctx);
+        loop {
+            activity.on_draw();
+
+            if let Some(exit_reason) = activity.on_umount() {
+                match exit_reason {
+                    ExitReason::Quit => {
+                        info!("StockOverview activity terminated due to {}", exit_reason);
+                        result = None;
+                        break;
+                    }
+                    ExitReason::EnterMainMenu => {
+                        info!("Leaving StockOverview for MainMenu due to: {}", exit_reason);
+                        result = Some(NextActivity::MainMenu);
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+        }
+        self.context = activity.on_destroy();
+        info!("StockOverview acitivity destroyed");
+        result
     }
 }
