@@ -2,14 +2,12 @@
 use crate::common::{Id, Msg};
 
 // Third party imports
-use rand::{thread_rng, Rng};
+use rand::Rng;
 use tuirealm::{
     command::{Cmd, CmdResult, Direction},
     event::{Key, KeyEvent, KeyModifiers},
     props::{Alignment, BorderType, Borders, Color, TableBuilder, TextModifiers, TextSpan},
-    tui::{layout::Rect, style::Style, widgets::Paragraph},
-    AttrValue, Attribute, Component, Event, Frame, MockComponent, NoUserEvent, Props, State,
-    StateValue,
+    Component, Event, MockComponent, NoUserEvent,
 };
 
 use tui_realm_stdlib::List;

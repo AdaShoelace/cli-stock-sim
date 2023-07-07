@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_imports)]
 // Crate imports
 use crate::{
     common::{Id, Msg},

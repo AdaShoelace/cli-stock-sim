@@ -11,6 +11,7 @@ pub enum Msg {
 
 
 
+#[allow(dead_code)]
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum Id {
     Label,

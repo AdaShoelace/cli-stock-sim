@@ -39,7 +39,7 @@ impl ActivityManager {
     fn run_main_menu(&mut self) -> Option<NextActivity> {
         let mut activity = MainMenu::new(Duration::from_millis(20));
         
-        let mut result: Option<NextActivity>;
+        let result: Option<NextActivity>;
         
         let ctx = match self.context.take() {
             Some(ctx) => ctx,
@@ -77,7 +77,7 @@ impl ActivityManager {
     fn run_stock_overview(&mut self) -> Option<NextActivity> {
         let mut activity = StockOverview::new(Duration::from_millis(20));
         
-        let mut result: Option<NextActivity>;
+        let result: Option<NextActivity>;
         
         let ctx = match self.context.take() {
             Some(ctx) => ctx,
