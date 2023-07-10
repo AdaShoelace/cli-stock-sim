@@ -15,8 +15,15 @@ impl StockOverview {
                 vec![]
             )
             .is_ok());
+        assert!(self
+            .app
+            .mount(
+                Id::Header,
+                Box::new(components::Header::default()),
+                vec![]
+            ).is_ok());
         debug!("StockOverview mounted");
-        assert!(self.app.active(&Id::StockOverview).is_ok());
+        assert!(self.app.active(&Id::Header).is_ok());
         debug!("StockOverview active");
     }
 
@@ -28,9 +35,10 @@ impl StockOverview {
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
                 .margin(1)
-                .constraints([Constraint::Length(3)].as_ref())
+                .constraints([Constraint::Length(3), Constraint::Length(3)].as_ref())
                 .split(f.size());
-            self.app.view(&Id::StockOverview, f, chunks[0]);
+            self.app.view(&Id::Header, f, chunks[0]);
+            self.app.view(&Id::StockOverview, f, chunks[1]);
         });
 
         if let Err(err) = res {
