@@ -1,13 +1,13 @@
 // Crate imports
-use crate::common::{Id, Msg};
+use crate::common::{Id, Msg, UserEvent};
 
 // Third party imports
 use rand::Rng;
 use tuirealm::{
     command::{Cmd, CmdResult, Direction},
     event::{Key, KeyEvent, KeyModifiers},
-    props::{Alignment, BorderType, Borders, Color, TableBuilder, TextModifiers, TextSpan, Style},
-    Component, Event, MockComponent, NoUserEvent,
+    props::{Attribute, AttrValue, Alignment, BorderType, Borders, Color, Style, TableBuilder, TextModifiers, TextSpan},
+    Component, Event, MockComponent, State, StateValue,
 };
 
 use tui_realm_stdlib::Table;
@@ -33,25 +33,26 @@ fn generate_stocks(n: usize) -> Stocks {
             },
             price: rng.gen_range(10..150),
         })
-        .collect()
+    .collect()
 }
 
 #[derive(MockComponent)]
 pub struct Overview {
     component: Table,
+    stocks: Stocks,
 }
 
 impl Default for Overview {
     fn default() -> Self {
         let stocks = generate_stocks(100);
-        Self {
+        let mut ret = Self {
             component: Table::default()
                 .title("Companies".to_owned(), Alignment::Center)
                 .background(Color::Reset)
                 .borders(
                     Borders::default()
-                        .color(Color::LightGreen)
-                        .modifiers(BorderType::Rounded),
+                    .color(Color::LightGreen)
+                    .modifiers(BorderType::Rounded),
                 )
                 .foreground(Color::LightGreen)
                 .modifiers(TextModifiers::BOLD)
@@ -66,10 +67,10 @@ impl Default for Overview {
                 .widths(&[30, 20, 50])
                 .table({
                     let mut tb = TableBuilder::default();
-                    let len = stocks.len();
-                    for (index, stock) in stocks.into_iter().enumerate() {
-                        tb.add_col(TextSpan::from(stock.name))
-                            .add_col(TextSpan::from(stock.industry))
+                    let len = stocks.len() - 1;
+                    for (index, stock) in stocks.iter().enumerate() {
+                        tb.add_col(TextSpan::from(stock.name.clone()))
+                            .add_col(TextSpan::from(stock.industry.clone()))
                             .add_col(TextSpan::from(format!("{} $", stock.price)));
 
                         if index != len {
@@ -79,22 +80,42 @@ impl Default for Overview {
 
                     tb.build()
                 })
-                .selected_line(0),
-        }
+            .selected_line(0),
+            stocks,
+        };
+
+        let stock_name = if let Some(stock) = ret.stocks.get(0) {
+            stock.name.clone()
+        } else {
+            String::new()
+        };
+
+        ret.attr(Attribute::Custom("CurrentStockName"), AttrValue::String(stock_name));
+        ret
     }
 }
 
-impl Component<Msg, NoUserEvent> for Overview {
-    fn on(&mut self, ev: Event<NoUserEvent>) -> Option<Msg> {
-        let _ = match ev {
+impl Component<Msg, UserEvent> for Overview {
+    fn on(&mut self, ev: Event<UserEvent>) -> Option<Msg> {
+        let cmd_res = match ev {
             Event::Keyboard(KeyEvent {
                 code: Key::Down,
+                modifiers: KeyModifiers::NONE,
+            })
+            | Event::Keyboard(KeyEvent {
+                code: Key::Char('j'),
                 modifiers: KeyModifiers::NONE,
             }) => self.perform(Cmd::Move(Direction::Down)),
             Event::Keyboard(KeyEvent {
                 code: Key::Up,
                 modifiers: KeyModifiers::NONE,
-            }) => self.perform(Cmd::Move(Direction::Up)),
+            })
+
+            | Event::Keyboard(KeyEvent {
+                code: Key::Char('k'),
+                modifiers: KeyModifiers::NONE,
+            })
+            => self.perform(Cmd::Move(Direction::Up)),
             Event::Keyboard(KeyEvent {
                 code: Key::Down,
                 modifiers: KeyModifiers::SHIFT,
@@ -108,12 +129,30 @@ impl Component<Msg, NoUserEvent> for Overview {
                 modifiers: KeyModifiers::NONE,
             }) => return Some(Msg::BlurStockOverview),
             Event::Keyboard(KeyEvent { code: Key::Esc, .. })
-            | Event::Keyboard(KeyEvent {
-                code: Key::Backspace,
-                ..
-            }) => return Some(Msg::ChangeActivity(Id::MainMenu)),
-            _ => CmdResult::None,
+                | Event::Keyboard(KeyEvent {
+                    code: Key::Backspace,
+                    ..
+                }) => return Some(Msg::ChangeActivity(Id::MainMenu)),
+            Event::User(UserEvent::Init) => {
+                if let Some(stock) = self.stocks.get(0) {
+                    return Some(Msg::UpdateStockChart(stock.name.clone()))
+                } else {
+                    CmdResult::None
+                }
+            }
+                _ => CmdResult::None,
         };
+
+        match cmd_res {
+            CmdResult::Changed(State::One(StateValue::Usize(index))) => {
+                if let Some(stock) = self.stocks.get(index) {
+                    let ret = Some(Msg::UpdateStockChart(stock.name.clone()));
+                    self.attr(Attribute::Custom("CurrentStockName"), AttrValue::String(stock.name.clone()));
+                    return ret;
+                }
+            }
+            _ => {}
+        }
         Some(Msg::None)
     }
 }

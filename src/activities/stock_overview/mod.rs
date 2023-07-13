@@ -2,35 +2,42 @@ mod update;
 mod view;
 
 use super::{Activity, Context, ExitReason};
-use crate::{Id, Msg};
+use crate::{Id, Msg, UserEvent, data_generator::MockDataGenerator};
 
 // std imports
-use std::time::Duration;
+use std::{time::Duration, sync::mpsc::{channel, Receiver, Sender}};
 
 // Third party import
 #[allow(unused_imports)]
 use log::{debug, error, info};
-use tuirealm::{Application, EventListenerCfg, NoUserEvent, PollStrategy, Update};
+use tuirealm::{Application, EventListenerCfg, PollStrategy, Update};
 
 pub struct StockOverview {
-    app: Application<Id, Msg, NoUserEvent>,
+    app: Application<Id, Msg, UserEvent>,
     exit_reason: Option<ExitReason>,
     context: Option<Context>,
     redraw: bool,
+    tx: Sender<UserEvent>
 }
 
 impl StockOverview {
     pub fn new(ticks: Duration) -> Self {
+        let (tx, rx) = channel();
         Self {
             app: Application::init(
                 EventListenerCfg::default()
                     .default_input_listener(ticks)
                     .poll_timeout(Duration::from_millis(10))
-                    .tick_interval(Duration::from_secs(1)),
+                    .tick_interval(Duration::from_secs(1))
+                    .port(
+                        Box::new(MockDataGenerator::new((0.0, 0.0), (50.0, 35.0), rx)),
+                        Duration::from_millis(100)
+                    ),
             ),
             exit_reason: None,
             context: None,
             redraw: true,
+            tx
         }
     }
 
@@ -68,7 +75,7 @@ impl Activity for StockOverview {
             return;
         }
         // Tick
-        match self.app.tick(PollStrategy::UpTo(3)) {
+        match self.app.tick(PollStrategy::Once) {
             Ok(messages) => {
                 for msg in messages.into_iter() {
                     let mut msg = Some(msg);

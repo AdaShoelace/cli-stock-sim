@@ -1,9 +1,16 @@
 // Crate imports
-use crate::{activities::{ExitReason, StockOverview}, common::{Id, Msg}};
+use crate::{
+    activities::{ExitReason, StockOverview},
+    common::{Id, Msg, UserEvent},
+    components,
+};
 
 // Third party imports
-use tuirealm::Update;
-
+use log::{error, debug};
+use tuirealm::{
+    props::{Alignment, AttrValue, Attribute},
+    Update, Sub, SubEventClause, SubClause
+};
 
 impl Update<Msg> for StockOverview {
     fn update(&mut self, msg: Option<Msg>) -> Option<Msg> {
@@ -25,8 +32,11 @@ impl Update<Msg> for StockOverview {
                 self.exit_reason = Some(ExitReason::EnterMainMenu);
                 None
             }
-            _ => None
+            Msg::UpdateStockChart(name) => {
+                _ = self.tx.send(UserEvent::CurrentStockChanged(name));
+                None
+            }
+            _ => None,
         }
     }
 }
-

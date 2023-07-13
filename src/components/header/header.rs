@@ -1,5 +1,5 @@
 // Crate imports
-use crate::common::{Id, Msg};
+use crate::common::{Id, Msg, UserEvent};
 
 // Third party imports
 use rand::Rng;
@@ -7,7 +7,7 @@ use tuirealm::{
     command::{Cmd, CmdResult, Direction},
     event::{Key, KeyEvent, KeyModifiers},
     props::{Alignment, BorderType, Borders, Color, TableBuilder, TextModifiers, TextSpan},
-    Component, Event, MockComponent, NoUserEvent, State, StateValue
+    Component, Event, MockComponent, State, StateValue
 };
 
 use tui_realm_stdlib::Radio;
@@ -40,8 +40,8 @@ impl Default for Header {
     }
 }
 
-impl Component<Msg, NoUserEvent> for Header {
-    fn on(&mut self, ev: Event<NoUserEvent>) -> Option<Msg> {
+impl Component<Msg, UserEvent> for Header {
+    fn on(&mut self, ev: Event<UserEvent>) -> Option<Msg> {
         let cmd_res = match ev {
             Event::Keyboard(KeyEvent {
                 code: Key::Left,

@@ -5,12 +5,8 @@ use crate::common::{Id, Msg};
 use tuirealm::{
     command::{Cmd, CmdResult, Direction},
     event::{Key, KeyEvent, KeyModifiers},
-    props::{
-        Alignment, BorderType, Borders, Color, TableBuilder, TextModifiers,
-        TextSpan,
-    },
-    Component, Event, MockComponent, NoUserEvent, State,
-    StateValue,
+    props::{Alignment, BorderType, Borders, Color, TableBuilder, TextModifiers, TextSpan},
+    Component, Event, MockComponent, NoUserEvent, State, StateValue,
 };
 
 use tui_realm_stdlib::List;
@@ -55,9 +51,18 @@ impl Component<Msg, NoUserEvent> for MainMenu {
             Event::Keyboard(KeyEvent {
                 code: Key::Down,
                 modifiers: KeyModifiers::NONE,
-            }) => self.perform(Cmd::Move(Direction::Down)),
+            }) 
+            | Event::Keyboard(KeyEvent {
+                code: Key::Char('j'),
+                modifiers: KeyModifiers::NONE,
+            })
+            => self.perform(Cmd::Move(Direction::Down)),
             Event::Keyboard(KeyEvent {
                 code: Key::Up,
+                modifiers: KeyModifiers::NONE,
+            })
+            | Event::Keyboard(KeyEvent {
+                code: Key::Char('k'),
                 modifiers: KeyModifiers::NONE,
             }) => self.perform(Cmd::Move(Direction::Up)),
             Event::Keyboard(KeyEvent {
@@ -72,9 +77,7 @@ impl Component<Msg, NoUserEvent> for MainMenu {
             Event::Keyboard(KeyEvent {
                 code: Key::Enter, ..
             }) => {
-                if let State::One(StateValue::Usize(value)) =
-                    self.state()
-                {
+                if let State::One(StateValue::Usize(value)) = self.state() {
                     match value {
                         0 => return Some(Msg::ChangeActivity(Id::StockOverview)),
                         1 => return Some(Msg::AppClose),

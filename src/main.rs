@@ -1,9 +1,9 @@
-mod activity_manager;
 mod activities;
+mod activity_manager;
 mod common;
-mod context;
 mod components;
-mod model;
+mod context;
+mod data_generator;
 mod util;
 
 // Crate imports
