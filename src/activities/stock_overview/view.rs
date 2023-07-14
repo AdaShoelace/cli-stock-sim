@@ -13,13 +13,13 @@ impl StockOverview {
     pub(super) fn init(&mut self) {
         assert!(self
             .app
-            .mount(Id::Header, Box::new(components::Header::default()), vec![])
+            .remount(Id::Header, Box::new(components::Header::default()), vec![])
             .is_ok());
         debug!("Header mounted");
 
         assert!(self
             .app
-            .mount(
+            .remount(
                 Id::StockOverview,
                 Box::new(components::stock_market::Overview::default()),
                 vec![Sub::new(SubEventClause::User(UserEvent::Init), SubClause::Always)]
@@ -29,7 +29,7 @@ impl StockOverview {
 
         assert!(self
             .app
-            .mount(
+            .remount(
                 Id::StockChart,
                 Box::new(components::stock_market::StockChart::new()),
                 vec![Sub::new(SubEventClause::Any, SubClause::Always)]

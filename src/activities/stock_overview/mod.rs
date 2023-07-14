@@ -2,10 +2,13 @@ mod update;
 mod view;
 
 use super::{Activity, Context, ExitReason};
-use crate::{Id, Msg, UserEvent, data_generator::MockDataGenerator};
+use crate::{data_generator::MockDataGenerator, Id, Msg, UserEvent};
 
 // std imports
-use std::{time::Duration, sync::mpsc::{channel, Receiver, Sender}};
+use std::{
+    sync::mpsc::{channel, Receiver, Sender},
+    time::Duration,
+};
 
 // Third party import
 #[allow(unused_imports)]
@@ -17,7 +20,7 @@ pub struct StockOverview {
     exit_reason: Option<ExitReason>,
     context: Option<Context>,
     redraw: bool,
-    tx: Sender<UserEvent>
+    tx: Sender<UserEvent>,
 }
 
 impl StockOverview {
@@ -31,13 +34,13 @@ impl StockOverview {
                     .tick_interval(Duration::from_secs(1))
                     .port(
                         Box::new(MockDataGenerator::new((0.0, 0.0), (50.0, 35.0), rx)),
-                        Duration::from_millis(100)
+                        Duration::from_millis(ticks.as_millis() as u64),
                     ),
             ),
             exit_reason: None,
             context: None,
             redraw: true,
-            tx
+            tx,
         }
     }
 
@@ -55,16 +58,23 @@ impl Activity for StockOverview {
         if let Err(err) = self.context.as_mut().unwrap().terminal().clear_screen() {
             error!("Failed to clear screen: {}", err);
         }
-    
-        if let Err(err) = self.context.as_mut().unwrap().terminal().enter_alternate_screen() {
+
+        if let Err(err) = self
+            .context
+            .as_mut()
+            .unwrap()
+            .terminal()
+            .enter_alternate_screen()
+        {
             error!("Failed to enter alternate screen: {}", err);
         }
 
         if let Err(err) = self.context.as_mut().unwrap().terminal().enable_raw_mode() {
             error!("Failed to enable raw mode: {}", err);
         }
-        
+
         self.init();
+        self.app.unlock_subs();
 
         info!("Activity initialized");
     }
@@ -100,6 +110,9 @@ impl Activity for StockOverview {
     }
 
     fn on_destroy(&mut self) -> Option<Context> {
+        _ = self.app.umount(&Id::StockOverview);
+        _ = self.app.umount(&Id::StockChart);
+        self.app.lock_subs();
         // Disable raw mode
         if let Err(err) = self.context_mut().terminal().disable_raw_mode() {
             error!("Failed to disable raw mode: {}", err);

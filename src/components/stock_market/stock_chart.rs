@@ -16,10 +16,10 @@ use tuirealm::{
     Component, Event, MockComponent,
 };
 
-const X_BOUND_MIN: f64= 0.0;
-const X_BOUND_MAX: f64= 50.0;
-const Y_BOUND_MIN: f64= 0.0;
-const Y_BOUND_MAX: f64= 50.0;
+const X_BOUND_MIN: f64 = 0.0;
+const X_BOUND_MAX: f64 = 50.0;
+const Y_BOUND_MIN: f64 = 0.0;
+const Y_BOUND_MAX: f64 = 50.0;
 
 #[derive(MockComponent)]
 pub struct StockChart {
