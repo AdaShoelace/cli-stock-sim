@@ -39,6 +39,9 @@ pub mod mock {
     use rand::Rng;
     use crate::models::{Stock, Stocks};
 
+    const ARROW_UP: char = '\u{2191}';
+    const ARROW_DOWN: char = '\u{2193}';
+
     pub const INDUSTRIES: [&'static str; 4] = ["Tech", "Properties", "Pharmaceuticals", "Raw Materials"];
 
     pub fn generate_stocks(n: usize) -> Stocks {
@@ -53,5 +56,17 @@ pub mod mock {
                 price: rng.gen_range(10..150),
             })
             .collect()
+    }
+
+    pub fn generate_stock_price_change() -> String {
+        let mut rng = rand::thread_rng();
+        let val: f32 = rng.gen_range(0.25..=2.5);
+
+        let arrow = if rng.gen_bool(0.5) {
+            ARROW_UP
+        } else {
+            ARROW_DOWN
+        };
+        format!("{val:.2} {}", arrow)
     }
 }

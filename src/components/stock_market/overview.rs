@@ -1,5 +1,5 @@
 // Crate imports
-use crate::{common::{Id, Msg, UserEvent, mock::{generate_stocks}}, models::{Stocks, Stock}};
+use crate::{common::{Id, Msg, UserEvent, mock}, models::{Stocks, Stock}};
 
 // Third party imports
 use tuirealm::{
@@ -19,7 +19,7 @@ pub struct Overview {
 
 impl Default for Overview {
     fn default() -> Self {
-        let stocks = generate_stocks(100);
+        let stocks = mock::generate_stocks(100);
         let mut ret = Self {
             component: Table::default()
                 .title("Companies".to_owned(), Alignment::Center)
@@ -48,7 +48,7 @@ impl Default for Overview {
                             .add_col(TextSpan::from(stock.industry.clone()))
                             .add_col(TextSpan::from(format!("{} $", stock.price)))
                             .add_col(TextSpan::from(format!("0")))
-                            .add_col(TextSpan::from(format!("asd")));
+                            .add_col(TextSpan::from(mock::generate_stock_price_change()));
 
                         if index != len {
                             tb.add_row();
