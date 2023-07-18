@@ -4,6 +4,7 @@ mod common;
 mod components;
 mod context;
 mod data_generator;
+mod models;
 mod util;
 
 // Crate imports

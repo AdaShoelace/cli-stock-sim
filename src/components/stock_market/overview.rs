@@ -1,8 +1,7 @@
 // Crate imports
-use crate::common::{Id, Msg, UserEvent};
+use crate::{common::{Id, Msg, UserEvent, mock::{generate_stocks}}, models::{Stocks, Stock}};
 
 // Third party imports
-use rand::Rng;
 use tuirealm::{
     command::{Cmd, CmdResult, Direction},
     event::{Key, KeyEvent, KeyModifiers},
@@ -11,30 +10,6 @@ use tuirealm::{
 };
 
 use tui_realm_stdlib::Table;
-
-const INDUSTRIES: [&'static str; 4] = ["Tech", "Properties", "Pharmaceuticals", "Raw Materials"];
-
-struct Stock {
-    name: String,
-    industry: String,
-    price: usize,
-}
-
-type Stocks = Vec<Stock>;
-
-fn generate_stocks(n: usize) -> Stocks {
-    let mut rng = rand::thread_rng();
-    (0..n)
-        .map(|i| Stock {
-            name: format!("Stock_{}", i),
-            industry: {
-                let index = rng.gen_range(0usize..(INDUSTRIES.len() - 1));
-                INDUSTRIES[index].to_owned()
-            },
-            price: rng.gen_range(10..150),
-        })
-    .collect()
-}
 
 #[derive(MockComponent)]
 pub struct Overview {
@@ -62,16 +37,18 @@ impl Default for Overview {
                 .rewind(true)
                 .step(5)
                 .row_height(1)
-                .headers(&["Company", "Industry", "Price"])
+                .headers(&["Company", "Industry", "Price", "Owned", "Change"])
                 .column_spacing(3)
-                .widths(&[30, 20, 50])
+                .widths(&[10, 20, 10, 10, 10])
                 .table({
                     let mut tb = TableBuilder::default();
                     let len = stocks.len() - 1;
                     for (index, stock) in stocks.iter().enumerate() {
                         tb.add_col(TextSpan::from(stock.name.clone()))
                             .add_col(TextSpan::from(stock.industry.clone()))
-                            .add_col(TextSpan::from(format!("{} $", stock.price)));
+                            .add_col(TextSpan::from(format!("{} $", stock.price)))
+                            .add_col(TextSpan::from(format!("0")))
+                            .add_col(TextSpan::from(format!("asd")));
 
                         if index != len {
                             tb.add_row();
