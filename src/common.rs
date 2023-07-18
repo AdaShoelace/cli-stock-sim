@@ -1,6 +1,8 @@
 // Crate imports
 use crate::data_generator::StockData;
 
+pub const GAME_NAME: &'static str = "Stock simulator";
+
 #[allow(dead_code)]
 #[derive(PartialEq)]
 pub enum Msg {
@@ -22,14 +24,16 @@ pub enum Id {
     Label,
     LetterCounter,
     MainMenu,
-    StockOverview,
     StockChart,
+    StockOverview,
+    TitleBar,
 }
 
 #[derive(Debug, PartialEq, Clone, PartialOrd)]
 pub enum UserEvent {
     DataGenerated(StockData),
     CurrentStockChanged(String),
+    TimeTick(i64),
     Init,
 }
 

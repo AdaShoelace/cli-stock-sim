@@ -13,6 +13,13 @@ impl StockOverview {
     pub(super) fn init(&mut self) {
         assert!(self
             .app
+            .remount(Id::TitleBar, Box::new(components::TitleBar::default()), vec![
+                Sub::new(SubEventClause::Any, SubClause::Always)
+            ])
+            .is_ok()
+        );
+        assert!(self
+            .app
             .remount(Id::Header, Box::new(components::Header::default()), vec![])
             .is_ok());
         debug!("Header mounted");
@@ -52,16 +59,18 @@ impl StockOverview {
                 .margin(1)
                 .constraints(
                     [
-                        Constraint::Percentage(6),
-                        Constraint::Percentage(47),
-                        Constraint::Percentage(47),
+                        Constraint::Percentage(5),
+                        Constraint::Percentage(5),
+                        Constraint::Percentage(45),
+                        Constraint::Percentage(45),
                     ]
                     .as_ref(),
                 )
                 .split(f.size());
-            self.app.view(&Id::Header, f, chunks[0]);
-            self.app.view(&Id::StockOverview, f, chunks[1]);
-            self.app.view(&Id::StockChart, f, chunks[2]);
+            self.app.view(&Id::TitleBar, f, chunks[0]);
+            self.app.view(&Id::Header, f, chunks[1]);
+            self.app.view(&Id::StockOverview, f, chunks[2]);
+            self.app.view(&Id::StockChart, f, chunks[3]);
         });
 
         if let Err(err) = res {

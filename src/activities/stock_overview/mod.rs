@@ -2,7 +2,7 @@ mod update;
 mod view;
 
 use super::{Activity, Context, ExitReason};
-use crate::{data_generator::MockDataGenerator, Id, Msg, UserEvent};
+use crate::{data_generator::{MockDataGenerator, TimeDataGenerator}, Id, Msg, UserEvent};
 
 // std imports
 use std::{
@@ -35,7 +35,8 @@ impl StockOverview {
                     .port(
                         Box::new(MockDataGenerator::new((0.0, 0.0), (50.0, 35.0), rx)),
                         Duration::from_secs(1),
-                    ),
+                    )
+                    .port(Box::new(TimeDataGenerator::default()), Duration::from_secs(5)),
             ),
             exit_reason: None,
             context: None,
