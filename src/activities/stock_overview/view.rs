@@ -4,7 +4,6 @@ use crate::{activities::StockOverview, common::{Id, UserEvent}, components};
 // Third party imports
 use log::{debug, error};
 use tuirealm::{
-    props::{AttrValue, Attribute},
     tui::layout::{Constraint, Direction, Layout},
     Sub, SubClause, SubEventClause,
 };

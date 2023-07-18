@@ -1,11 +1,11 @@
 // Crate imports
-use crate::{common::{Id, Msg, UserEvent, mock}, models::{Stocks, Stock}};
+use crate::{common::{Id, Msg, UserEvent, mock}, models::Stocks};
 
 // Third party imports
 use tuirealm::{
     command::{Cmd, CmdResult, Direction},
     event::{Key, KeyEvent, KeyModifiers},
-    props::{Attribute, AttrValue, Alignment, BorderType, Borders, Color, Style, TableBuilder, TextModifiers, TextSpan},
+    props::{Attribute, AttrValue, Alignment, BorderType, Borders, Color, TableBuilder, TextModifiers, TextSpan},
     Component, Event, MockComponent, State, StateValue,
 };
 

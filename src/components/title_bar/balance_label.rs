@@ -1,11 +1,10 @@
 // Crate imports
-use crate::common::{Msg, UserEvent, GAME_NAME};
+use crate::common::{Msg, UserEvent};
 
 // Third party imports
 use tui_realm_stdlib::Label;
 use tuirealm::{
-    props::{Alignment, BorderSides, Borders, Color, Layout, TextModifiers},
-    tui::layout::{Constraint, Direction},
+    props::{Alignment, Color},
     Component, Event, MockComponent,
 };
 

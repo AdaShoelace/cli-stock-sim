@@ -6,7 +6,7 @@ use crate::{data_generator::{MockDataGenerator, TimeDataGenerator}, Id, Msg, Use
 
 // std imports
 use std::{
-    sync::mpsc::{channel, Receiver, Sender},
+    sync::mpsc::{channel, Sender},
     time::Duration,
 };
 

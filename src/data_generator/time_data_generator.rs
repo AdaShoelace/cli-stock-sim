@@ -2,7 +2,7 @@
 use crate::common::UserEvent;
 
 // Std imports
-use std::{sync::mpsc::{Receiver, Sender, channel}, thread, time};
+use std::{sync::mpsc::{Receiver, channel}, thread, time};
 
 // Third party imports
 use log::{debug, error};

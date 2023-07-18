@@ -1,16 +1,14 @@
 // Crate imports
-use crate::common::{Id, Msg, UserEvent};
+use crate::common::{Msg, UserEvent};
 
 // Third party imports
 use log::debug;
 use tui_realm_stdlib::Chart;
 use tuirealm::{
-    command::{Cmd, CmdResult, Direction, Position},
-    event::{Key, KeyEvent, KeyModifiers},
-    listener::{ListenerResult, Poll},
+    command::CmdResult,
     props::{
         Alignment, AttrValue, Attribute, BorderType, Borders, Color, Dataset, PropPayload,
-        PropValue, Style, TableBuilder, TextModifiers, TextSpan,
+        PropValue, Style,
     },
     tui::{symbols::Marker, widgets::GraphType},
     Component, Event, MockComponent,

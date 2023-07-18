@@ -2,11 +2,10 @@
 use crate::common::{Id, Msg, UserEvent};
 
 // Third party imports
-use rand::Rng;
 use tuirealm::{
     command::{Cmd, CmdResult, Direction},
     event::{Key, KeyEvent, KeyModifiers},
-    props::{Alignment, BorderType, Borders, Color, TableBuilder, TextModifiers, TextSpan},
+    props::{BorderType, Borders, Color, },
     Component, Event, MockComponent, State, StateValue
 };
 
