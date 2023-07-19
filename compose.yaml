@@ -1,0 +1,25 @@
+version: '3'
+services:
+  database:
+    image: 'postgres:latest'
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: stock-dev-user
+      POSTGRES_PASSWORD: stock-dev
+      POSTGRES_DB: dev_database
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgres-data:/var/lib/postresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  pgadmin:
+    image: 'dpage/pgadmin4'
+    ports:
+      - 8080:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'stock@dev.com'
+      PGADMIN_DEFAULT_PASSWORD: 'stock-dev'
+    depends_on:
+      - database
