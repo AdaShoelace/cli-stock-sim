@@ -25,7 +25,7 @@ impl Default for TimeDataGenerator {
 
             loop {
                 if time::Instant::now().duration_since(dt) >= time::Duration::from_secs(3) {
-                    if let Err(e) = tx.send(sntp::unix_timestamp("ntp.aliyun.com")) {
+                    if let Err(e) = tx.send(sntp::unix_timestamp("europe.pool.ntp.org")) {
                         error!("{}", e);
                     }
                     dt = time::Instant::now();
@@ -41,8 +41,11 @@ impl Poll<UserEvent> for TimeDataGenerator {
     fn poll(&mut self) -> ListenerResult<Option<Event<UserEvent>>> {
         let res = if let Ok(dur) = self.rx.try_recv() {
             debug!("Time: {:?}", dur);
-            let dur = dur.unwrap().as_secs() as i64;
-            Some(Event::User(UserEvent::TimeTick(dur)))
+            if let Ok(dur) = dur {
+                Some(Event::User(UserEvent::TimeTick(dur.as_secs() as i64)))
+            } else {
+                None
+            }
         } else {
             None
         };
