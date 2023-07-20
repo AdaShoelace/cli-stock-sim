@@ -2,7 +2,7 @@ mod balance_label;
 mod time_label;
 
 // Crate imports
-use crate::common::{Msg, UserEvent, GAME_NAME};
+use crate::common::{Msg, UserEvent, constants::GAME_NAME};
 use balance_label::BalanceLabel; 
 use time_label::TimeLabel;
 

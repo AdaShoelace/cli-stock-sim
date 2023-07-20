@@ -118,7 +118,7 @@ impl MockComponent for Counter {
                 .unwrap_flag();
             frame.render_widget(
                 Paragraph::new(text)
-                    .block(get_block(borders, title, focus))
+                    .block(get_block(borders, Some(title), focus, None))
                     .style(
                         Style::default()
                             .fg(foreground)

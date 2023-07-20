@@ -16,6 +16,6 @@ use anyhow::Result;
 fn main() -> Result<()> {
     util::init_logging()?;
     let mut manager = ActivityManager::new();
-    manager.run(NextActivity::MainMenu);
+    manager.run(NextActivity::Login);
     Ok(())
 }

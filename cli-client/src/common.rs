@@ -1,7 +1,12 @@
 // Crate imports
 use crate::data_generator::StockData;
 
-pub const GAME_NAME: &'static str = "Stock simulator";
+pub mod constants {
+    pub const GAME_NAME: &'static str = "Stock simulator";
+    pub const ARROW_UP: char = '\u{2191}';
+    pub const ARROW_DOWN: char = '\u{2193}';
+    pub const DOT: char = '\u{00b7}';
+}
 
 #[allow(dead_code)]
 #[derive(PartialEq)]
@@ -10,8 +15,11 @@ pub enum Msg {
     BlurHeader,
     BlurStockOverview,
     BlurStockChart,
+    BlurUsernameInput,
+    BlurPasswordInput,
     ButtonPressed(isize),
     ChangeActivity(Id),
+    Login,
     StockDataChanged,
     UpdateStockChart(String),
     None,
@@ -23,6 +31,9 @@ pub enum Id {
     Header,
     Label,
     LetterCounter,
+    Login,
+    LoginPasswordInput,
+    LoginUsernameInput,
     MainMenu,
     StockChart,
     StockOverview,
@@ -41,10 +52,9 @@ impl Eq for UserEvent {}
 
 pub mod mock {
     use rand::Rng;
+    use super::constants::{ARROW_UP, ARROW_DOWN};
     use crate::models::{Stock, Stocks};
 
-    const ARROW_UP: char = '\u{2191}';
-    const ARROW_DOWN: char = '\u{2193}';
 
     pub const INDUSTRIES: [&'static str; 4] = ["Tech", "Properties", "Pharmaceuticals", "Raw Materials"];
 
