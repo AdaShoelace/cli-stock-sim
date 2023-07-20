@@ -77,3 +77,36 @@ CREATE OR REPLACE TRIGGER update_updated_on_users
     ON public.users
     FOR EACH ROW
     EXECUTE FUNCTION public.update_updated_on_column();
+
+----------------------------------------------------------
+
+-- Table: public.industries
+
+-- DROP TABLE IF EXISTS public.industries;
+
+CREATE TABLE IF NOT EXISTS public.industries
+(
+    id integer NOT NULL DEFAULT nextval('industries_id_seq'::regclass),
+    name character varying(128) COLLATE pg_catalog."default" NOT NULL,
+    created_on timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_on timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT industries_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.industries
+    OWNER to "stock-dev-user";
+
+-- Trigger: update_updated_on_industries
+
+-- DROP TRIGGER IF EXISTS update_updated_on_industries ON public.industries;
+
+CREATE OR REPLACE TRIGGER update_updated_on_industries
+    BEFORE UPDATE 
+    ON public.industries
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_updated_on_column();
+
+------------------------------------------------------------------
+
