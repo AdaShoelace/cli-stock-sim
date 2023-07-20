@@ -2,5 +2,6 @@
 
 members = [
 	"cli-client",
-	"login-service"
+	"login-service",
+	"dto"
 ]
