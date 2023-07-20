@@ -7,7 +7,8 @@ use crate::util::init_logging;
 use anyhow::Result;
 use log::{debug, warn, info, trace, error};
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     _ = init_logging()?;
 
     info!("This is info");

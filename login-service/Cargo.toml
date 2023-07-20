@@ -7,9 +7,17 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.72"
-fern = { version = "0.6.2", features = ["chrono", "colored"] }
-humantime = "2.1.0"
+axum = "0.6.19"
 log = "0.4.19"
+tower = "0.4.13"
+
+[dependencies.fern]
+version = "0.6.2"
+features = ["chrono", "colored"] 
+
+[dependencies.hyper]
+version = "0.14.27"
+features = ["full"]
 
 [dependencies.sqlx]
 version = "0.7.1"
