@@ -29,7 +29,7 @@ pub fn init_logging() -> Result<()> {
         })
         .level(log::LevelFilter::Debug)
         .level_for("hyper", log::LevelFilter::Info)
-        .chain(fern::log_file("output.log")?)
+        .chain(fern::log_file("/tmp/cli-stock.log")?)
         .apply()?;
     Ok(())
 }
