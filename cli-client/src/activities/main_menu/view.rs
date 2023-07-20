@@ -27,9 +27,16 @@ impl MainMenu {
             let chunks = Layout::default()
                 .direction(Direction::Vertical)
                 .margin(1)
-                .constraints([Constraint::Length(3)].as_ref())
+                .constraints([Constraint::Ratio(1, 3), Constraint::Ratio(1, 3), Constraint::Ratio(1, 3)].as_ref())
                 .split(f.size());
-            self.app.view(&Id::MainMenu, f, chunks[0]);
+                
+            let centered = Layout::default()
+                .direction(Direction::Horizontal)
+                .margin(1)
+                .constraints([Constraint::Ratio(1, 3), Constraint::Ratio(1, 3), Constraint::Ratio(1, 3)].as_ref())
+                .split(chunks[1]);
+
+            self.app.view(&Id::MainMenu, f, centered[1]);
         });
 
         if let Err(err) = res {
