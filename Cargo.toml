@@ -1,5 +1,6 @@
 [workspace]
 
 members = [
-	"cli-client"
+	"cli-client",
+	"login-service"
 ]
