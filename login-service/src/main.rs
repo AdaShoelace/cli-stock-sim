@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 mod util;
 
 // Crate imports
@@ -8,12 +9,12 @@ use std::env;
 
 // Third party imports
 use anyhow::Result;
-use log::{debug, error, info, trace, warn};
+use tracing::{info, debug};
 use sqlx::postgres::PgPool;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    _ = init_logging()?;
+    init_logging();
 
     let pool = PgPool::connect(&env::var("DATABASE_URL")?).await?;
     _ = get_stock(&pool, 2).await;
