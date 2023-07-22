@@ -1,11 +1,9 @@
-mod counter;
 mod header;
 mod login;
 mod menu;
 mod title_bar;
 pub mod stock_market;
 
-pub use counter::LetterCounter;
 pub use header::Header;
 pub use login::Login;
 pub use menu::MainMenu;
