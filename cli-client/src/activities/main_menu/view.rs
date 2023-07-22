@@ -1,5 +1,6 @@
 //Crate imports
-use crate::{activities::MainMenu, common::Id, components};
+use crate::common::Id;
+use super::{MainMenu, components};
 
 // Third party imports
 use tuirealm::tui::layout::{Layout, Constraint, Direction};
