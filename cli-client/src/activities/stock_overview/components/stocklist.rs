@@ -1,5 +1,5 @@
 // Crate imports
-use crate::{common::{Id, Msg, UserEvent, mock}, models::Stocks};
+use crate::{common::{ActivityId, Msg, UserEvent, mock}, models::Stocks};
 
 // Third party imports
 use tuirealm::{
@@ -12,12 +12,12 @@ use tuirealm::{
 use tui_realm_stdlib::Table;
 
 #[derive(MockComponent)]
-pub struct Overview {
+pub struct StockList {
     component: Table,
     stocks: Stocks,
 }
 
-impl Default for Overview {
+impl Default for StockList {
     fn default() -> Self {
         let stocks = mock::generate_stocks(100);
         let mut ret = Self {
@@ -72,7 +72,7 @@ impl Default for Overview {
     }
 }
 
-impl Component<Msg, UserEvent> for Overview {
+impl Component<Msg, UserEvent> for StockList {
     fn on(&mut self, ev: Event<UserEvent>) -> Option<Msg> {
         let cmd_res = match ev {
             Event::Keyboard(KeyEvent {
@@ -104,12 +104,12 @@ impl Component<Msg, UserEvent> for Overview {
             Event::Keyboard(KeyEvent {
                 code: Key::Tab,
                 modifiers: KeyModifiers::NONE,
-            }) => return Some(Msg::BlurStockOverview),
+            }) => return Some(Msg::BlurStockList),
             Event::Keyboard(KeyEvent { code: Key::Esc, .. })
                 | Event::Keyboard(KeyEvent {
                     code: Key::Backspace,
                     ..
-                }) => return Some(Msg::ChangeActivity(Id::MainMenu)),
+                }) => return Some(Msg::ChangeActivity(ActivityId::MainMenu)),
             Event::User(UserEvent::Init) => {
                 if let Some(stock) = self.stocks.get(0) {
                     return Some(Msg::UpdateStockChart(stock.name.clone()))

@@ -1,7 +1,7 @@
 mod activities;
 mod activity_manager;
 mod common;
-mod components;
+mod common_components;
 mod context;
 mod data_generator;
 mod models;

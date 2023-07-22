@@ -1,5 +1,5 @@
 // Crate imports
-use crate::common::{Id, Msg, UserEvent};
+use crate::common::{ActivityId, Msg, UserEvent};
 
 // Third party imports
 use tuirealm::{
@@ -62,14 +62,14 @@ impl Component<Msg, UserEvent> for Header {
             | Event::Keyboard(KeyEvent {
                 code: Key::Backspace,
                 ..
-            }) => return Some(Msg::ChangeActivity(Id::MainMenu)),
+            }) => return Some(Msg::ChangeActivity(ActivityId::MainMenu)),
             _ => CmdResult::None,
         };
         
         match cmd_res {
             CmdResult::Submit(State::One(StateValue::Usize(c))) => {
                 if c == self.component.states.choices.len() -1 {
-                    return Some(Msg::ChangeActivity(Id::MainMenu));
+                    return Some(Msg::ChangeActivity(ActivityId::MainMenu));
                 }
             }
             _ => {}

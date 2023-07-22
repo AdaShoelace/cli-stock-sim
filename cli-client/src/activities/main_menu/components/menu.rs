@@ -1,5 +1,5 @@
 // Crate imports
-use crate::common::{Id, Msg};
+use crate::common::{ActivityId, Msg};
 
 // Third party imports
 use tuirealm::{
@@ -79,7 +79,7 @@ impl Component<Msg, NoUserEvent> for MainMenu {
             }) => {
                 if let State::One(StateValue::Usize(value)) = self.state() {
                     match value {
-                        0 => return Some(Msg::ChangeActivity(Id::StockOverview)),
+                        0 => return Some(Msg::ChangeActivity(ActivityId::StockOverview)),
                         1 => return Some(Msg::AppClose),
                         _ => {}
                     }

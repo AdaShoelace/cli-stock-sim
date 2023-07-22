@@ -1,5 +1,5 @@
 // Crate imports
-use crate::{activities::{ExitReason, Login}, common::{Msg, Id}};
+use crate::{activities::{ExitReason, Login}, common::{Msg, ActivityId}};
 
 // Third party imports
 use tuirealm::Update;
@@ -12,7 +12,7 @@ impl Update<Msg> for Login {
                 self.exit_reason = Some(ExitReason::Quit);
                 None
             }
-            Msg::ChangeActivity(Id::StockOverview) => {
+            Msg::ChangeActivity(ActivityId::StockOverview) => {
                 self.exit_reason = Some(ExitReason::EnterMainMenu);
                 None
             }

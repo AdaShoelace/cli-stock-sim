@@ -13,12 +13,12 @@ pub mod constants {
 pub enum Msg {
     AppClose,
     BlurHeader,
-    BlurStockOverview,
+    BlurStockList,
     BlurStockChart,
     BlurUsernameInput,
     BlurPasswordInput,
     ButtonPressed(isize),
-    ChangeActivity(Id),
+    ChangeActivity(ActivityId),
     Login,
     StockDataChanged,
     UpdateStockChart(String),
@@ -36,8 +36,17 @@ pub enum Id {
     LoginUsernameInput,
     MainMenu,
     StockChart,
-    StockOverview,
+    StockList,
     TitleBar,
+}
+
+#[allow(dead_code)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub enum ActivityId {
+    Login,
+    MainMenu,
+    StockOverview,
+    Profile
 }
 
 #[derive(Debug, PartialEq, Clone, PartialOrd)]

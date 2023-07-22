@@ -1,7 +1,7 @@
 // Crate imports
 use crate::{
     activities::{ExitReason, StockOverview},
-    common::{Id, Msg, UserEvent},
+    common::{ActivityId, Id, Msg, UserEvent},
 };
 
 // Third party imports
@@ -12,10 +12,10 @@ impl Update<Msg> for StockOverview {
         self.redraw = true;
         match msg.unwrap_or(Msg::None) {
             Msg::BlurHeader => {
-                assert!(self.app.active(&Id::StockOverview).is_ok());
+                assert!(self.app.active(&Id::StockList).is_ok());
                 None
             }
-            Msg::BlurStockOverview => {
+            Msg::BlurStockList => {
                 assert!(self.app.active(&Id::Header).is_ok());
                 None
             }
@@ -23,7 +23,7 @@ impl Update<Msg> for StockOverview {
                 self.exit_reason = Some(ExitReason::Quit);
                 None
             }
-            Msg::ChangeActivity(Id::MainMenu) => {
+            Msg::ChangeActivity(ActivityId::MainMenu) => {
                 self.exit_reason = Some(ExitReason::EnterMainMenu);
                 None
             }

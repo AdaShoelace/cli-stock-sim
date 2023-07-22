@@ -1,3 +1,4 @@
+mod components;
 mod update;
 mod view;
 
@@ -111,7 +112,7 @@ impl Activity for StockOverview {
     }
 
     fn on_destroy(&mut self) -> Option<Context> {
-        _ = self.app.umount(&Id::StockOverview);
+        _ = self.app.umount(&Id::StockList);
         _ = self.app.umount(&Id::StockChart);
         self.app.lock_subs();
         // Disable raw mode

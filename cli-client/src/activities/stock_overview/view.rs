@@ -1,5 +1,6 @@
 //Crate imports
-use crate::{activities::StockOverview, common::{Id, UserEvent}, components};
+use crate::{common::{Id, UserEvent}, common_components};
+use super::{StockOverview, components};
 
 // Third party imports
 use log::{debug, error};
@@ -12,7 +13,7 @@ impl StockOverview {
     pub(super) fn init(&mut self) {
         assert!(self
             .app
-            .remount(Id::TitleBar, Box::new(components::TitleBar::default()), vec![
+            .remount(Id::TitleBar, Box::new(common_components::TitleBar::default()), vec![
                 Sub::new(SubEventClause::Any, SubClause::Always)
             ])
             .is_ok()
@@ -26,8 +27,8 @@ impl StockOverview {
         assert!(self
             .app
             .remount(
-                Id::StockOverview,
-                Box::new(components::stock_market::Overview::default()),
+                Id::StockList,
+                Box::new(components::StockList::default()),
                 vec![Sub::new(SubEventClause::User(UserEvent::Init), SubClause::Always)]
             )
             .is_ok());
@@ -37,7 +38,7 @@ impl StockOverview {
             .app
             .remount(
                 Id::StockChart,
-                Box::new(components::stock_market::StockChart::new()),
+                Box::new(components::StockChart::new()),
                 vec![Sub::new(SubEventClause::Any, SubClause::Always)]
             )
             .is_ok());
@@ -68,7 +69,7 @@ impl StockOverview {
                 .split(f.size());
             self.app.view(&Id::TitleBar, f, chunks[0]);
             self.app.view(&Id::Header, f, chunks[1]);
-            self.app.view(&Id::StockOverview, f, chunks[2]);
+            self.app.view(&Id::StockList, f, chunks[2]);
             self.app.view(&Id::StockChart, f, chunks[3]);
         });
 
