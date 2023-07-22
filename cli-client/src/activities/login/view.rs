@@ -1,5 +1,6 @@
 //Crate imports
-use crate::{activities::Login, common::Id, components};
+use crate::common::Id;
+use super::{Login, components};
 
 // Third party imports
 use log::error;
