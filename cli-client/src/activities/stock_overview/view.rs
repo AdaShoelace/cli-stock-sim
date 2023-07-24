@@ -1,11 +1,11 @@
 //Crate imports
-use crate::{common::{Id, UserEvent}, common_components};
+use crate::{common::{Id, UserEvent}, common_components, util::popup};
 use super::{StockOverview, components};
 
 // Third party imports
 use log::{debug, error};
 use tuirealm::{
-    tui::layout::{Constraint, Direction, Layout},
+    tui::{layout::{Constraint, Direction, Layout}, widgets::Clear},
     Sub, SubClause, SubEventClause,
 };
 
@@ -67,10 +67,33 @@ impl StockOverview {
                     .as_ref(),
                 )
                 .split(f.size());
+
             self.app.view(&Id::TitleBar, f, chunks[0]);
             self.app.view(&Id::Header, f, chunks[1]);
             self.app.view(&Id::StockList, f, chunks[2]);
             self.app.view(&Id::StockChart, f, chunks[3]);
+
+            if self.app.mounted(&Id::ExitPopUp) {
+                let pop = popup::Popup(popup::Size::Percentage(50), popup::Size::Percentage(20)).draw_in(f.size());
+                f.render_widget(Clear, pop);
+
+                let _popup_chunks = Layout::default()
+                    .direction(Direction::Vertical)
+                    .constraints(
+                        [
+                            Constraint::Percentage(50),
+                            Constraint::Percentage(50),
+                        ]
+                        .as_ref()
+                    ).split(pop);
+                self.app.view(&Id::ExitPopUp, f, pop);
+                if let Some(&Id::ExitPopUp) = self.app.focus() {
+            
+                } else {
+                    assert!(self.app.active(&Id::ExitPopUp).is_ok());
+                }
+            }
+
         });
 
         if let Err(err) = res {

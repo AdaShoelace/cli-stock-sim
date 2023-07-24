@@ -2,13 +2,14 @@
 use crate::common::{Msg, UserEvent};
 
 // Third party imports
-use tui_realm_stdlib::{Label, Phantom};
+use tui_realm_stdlib::{Label, Phantom, Radio};
 use tuirealm::{
-    command::{Cmd, CmdResult},
+    command::{self, Cmd, CmdResult},
     event::{Key, KeyEvent},
-    props::{Alignment, BorderType, Borders, Color, Layout, Props},
-    tui::layout::{Constraint, Direction, Rect},
-    AttrValue, Attribute, Component, Event, Frame, MockComponent, State,
+    props::{Alignment, BorderSides, BorderType, Borders, Color, Layout, Props},
+    tui::layout::{Constraint, Direction, Rect, Layout as TuiLayout},
+    tui::widgets::Clear,
+    AttrValue, Attribute, Component, Event, Frame, MockComponent, State, StateValue
 };
 
 pub struct ExitPopUp {
@@ -17,9 +18,12 @@ pub struct ExitPopUp {
 }
 
 impl ExitPopUp {
-    /*fn attr_child(&mut self, child: Children, attr: Attribute, value: AttrValue) {
-        self.children[child as usize].attr(attr, value);
-    }*/
+    pub fn focus_radio(&mut self) {
+        self.props.set(Attribute::Focus, AttrValue::Flag(false));
+        self.children[2].attr(Attribute::Focus, AttrValue::Flag(true));
+    }
+
+    #[allow(dead_code)]
     pub fn foreground(mut self, fg: Color) -> Self {
         self.attr(Attribute::Foreground, AttrValue::Color(fg));
         self
@@ -60,31 +64,43 @@ impl Default for ExitPopUp {
             props: Props::default(),
             children: Default::default(),
         };
+        
+        let main_layout = Layout::default()
+                    .direction(Direction::Vertical)
+                    .constraints(&[
+                        Constraint::Ratio(1, 4), // Padding
+                        Constraint::Ratio(1, 4), // Label
+                        Constraint::Ratio(1, 4), // Label
+                    ]);
+
         ret = ret
             .borders(
                 Borders::default()
                     .modifiers(BorderType::Rounded)
                     .color(Color::Yellow),
             )
-            .layout(
-                Layout::default()
-                    .direction(Direction::Vertical)
-                    .constraints(&[
-                        Constraint::Ratio(1, 4), // Padding
-                        Constraint::Ratio(1, 4), // Label
-                    ])
-                    .margin(2),
-            )
-            .background(Color::Gray)
+            .layout(main_layout)
+            .background(Color::Reset)
             .children(vec![
                 Box::new(Phantom::default()),
                 Box::new(
                     Label::default()
                         .alignment(Alignment::Center)
+                        .background(Color::Reset)
                         .foreground(Color::Yellow)
                         .text("Are you sure you want to quit?"),
                 ),
+                Box::new(
+                    Radio::default()
+                        .borders(Borders::default().sides(BorderSides::NONE))
+                        .background(Color::Reset)
+                        .foreground(Color::LightGreen)
+                        .rewind(true)
+                        .choices(&["No", "Yes"])
+                        .value(0),
+                ),
             ]);
+        ret.focus_radio();
         ret
     }
 }
@@ -106,12 +122,30 @@ impl MockComponent for ExitPopUp {
             if let Some(layout) = self.props.get(Attribute::Layout).map(|x| x.unwrap_layout()) {
                 // make chunks
                 let chunks = layout.chunks(area);
-                // iter chunks
-                for (i, chunk) in chunks.into_iter().enumerate() {
-                    if let Some(child) = self.children.get_mut(i) {
-                        child.view(render, chunk);
-                    }
-                }
+                self.children[0].view(render, chunks[0]);
+                self.children[1].view(render, chunks[1]);
+                let radio_layout_x = TuiLayout::default()
+                    .direction(Direction::Horizontal)
+                    .constraints(
+                        [
+                            Constraint::Ratio(1, 5),
+                            Constraint::Ratio(1, 5),
+                            Constraint::Ratio(1, 5),
+                            Constraint::Ratio(1, 5),
+                            Constraint::Ratio(1, 5),
+                        ].as_ref()
+                    ).split(chunks[2]);
+                let radio_layout_y = TuiLayout::default()
+                    .direction(Direction::Vertical)
+                    .constraints(
+                        [
+                            Constraint::Ratio(1, 3),
+                            Constraint::Ratio(1, 3),
+                        ].as_ref()
+                    ).split(radio_layout_x[2]);
+                render.render_widget(Clear, radio_layout_y[0]);
+                self.children[2].attr(Attribute::Background, AttrValue::Color(Color::Reset));
+                self.children[2].view(render, radio_layout_y[0]);
             }
         }
     }
@@ -137,33 +171,33 @@ impl MockComponent for ExitPopUp {
     }
 
     fn perform(&mut self, cmd: Cmd) -> CmdResult {
-        match cmd {
-            _ => CmdResult::None,
-        }
+        self.children[2].perform(cmd)
     }
 }
 
 impl Component<Msg, UserEvent> for ExitPopUp {
     fn on(&mut self, ev: Event<UserEvent>) -> Option<Msg> {
         let cmd = match ev {
-            Event::Keyboard(KeyEvent { code: Key::Tab, .. }) => Cmd::Toggle,
+            Event::Keyboard(KeyEvent { code: Key::Tab, .. })
+            | Event::Keyboard(KeyEvent {
+                code: Key::Right, ..
+            }) => Cmd::Move(command::Direction::Right),
             Event::Keyboard(KeyEvent {
-                code: Key::Backspace,
-                ..
-            }) => Cmd::Delete,
+                code: Key::Left, ..
+            }) => Cmd::Move(command::Direction::Left),
             Event::Keyboard(KeyEvent {
                 code: Key::Enter, ..
             }) => Cmd::Submit,
-            Event::Keyboard(KeyEvent {
-                code: Key::Char(c), ..
-            }) => Cmd::Type(c),
-            Event::Keyboard(KeyEvent { code: Key::Esc, .. }) => return Some(Msg::AppClose),
+            Event::Keyboard(KeyEvent { code: Key::Esc, .. }) => return Some(Msg::CloseExitPopUp),
             _ => Cmd::None,
         };
         match self.perform(cmd) {
-            CmdResult::Batch(_vec) => {
-                // TODO: implement sending of credentials
-                Some(Msg::None)
+            CmdResult::Submit(State::One(StateValue::Usize(index))) => {
+                match index {
+                    0 => return Some(Msg::CloseExitPopUp),
+                    1 => return Some(Msg::AppClose),
+                    _ => return Some(Msg::None)
+                }
             }
             _ => Some(Msg::None),
         }

@@ -63,6 +63,10 @@ impl Component<Msg, UserEvent> for Header {
                 code: Key::Backspace,
                 ..
             }) => return Some(Msg::ChangeActivity(ActivityId::MainMenu)),
+            Event::Keyboard(KeyEvent {
+                code: Key::Char('p'),
+                modifiers: KeyModifiers::NONE,
+            }) => return Some(Msg::OpenExitPopUp),
             _ => CmdResult::None,
         };
         

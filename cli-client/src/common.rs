@@ -21,6 +21,8 @@ pub enum Msg {
     ChangeActivity(ActivityId),
     Login,
     StockDataChanged,
+    OpenExitPopUp,
+    CloseExitPopUp,
     UpdateStockChart(String),
     None,
 }
@@ -28,6 +30,7 @@ pub enum Msg {
 #[allow(dead_code)]
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum Id {
+    ExitPopUp,
     Header,
     Label,
     LetterCounter,
