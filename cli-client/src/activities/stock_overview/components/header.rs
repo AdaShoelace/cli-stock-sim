@@ -32,7 +32,7 @@ impl Default for Header {
                 .choices(&[
                     "Profile",
                     "Stock Overview",
-                    "Main menu"
+                    "Quit"
                 ])
                 .value(1)
         }
@@ -58,11 +58,11 @@ impl Component<Msg, UserEvent> for Header {
                 code: Key::Tab,
                 modifiers: KeyModifiers::NONE,
             }) => return Some(Msg::BlurHeader),
-            Event::Keyboard(KeyEvent { code: Key::Esc, .. })
+            /*Event::Keyboard(KeyEvent { code: Key::Esc, .. })
             | Event::Keyboard(KeyEvent {
                 code: Key::Backspace,
                 ..
-            }) => return Some(Msg::ChangeActivity(ActivityId::MainMenu)),
+            }) => return Some(Msg::ChangeActivity(ActivityId::MainMenu)),*/
             Event::Keyboard(KeyEvent {
                 code: Key::Char('p'),
                 modifiers: KeyModifiers::NONE,
@@ -73,7 +73,7 @@ impl Component<Msg, UserEvent> for Header {
         match cmd_res {
             CmdResult::Submit(State::One(StateValue::Usize(c))) => {
                 if c == self.component.states.choices.len() -1 {
-                    return Some(Msg::ChangeActivity(ActivityId::MainMenu));
+                    return Some(Msg::OpenExitPopUp);
                 }
             }
             _ => {}

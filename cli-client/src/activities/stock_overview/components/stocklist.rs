@@ -105,11 +105,6 @@ impl Component<Msg, UserEvent> for StockList {
                 code: Key::Tab,
                 modifiers: KeyModifiers::NONE,
             }) => return Some(Msg::BlurStockList),
-            Event::Keyboard(KeyEvent { code: Key::Esc, .. })
-                | Event::Keyboard(KeyEvent {
-                    code: Key::Backspace,
-                    ..
-                }) => return Some(Msg::ChangeActivity(ActivityId::MainMenu)),
             Event::User(UserEvent::Init) => {
                 if let Some(stock) = self.stocks.get(0) {
                     return Some(Msg::UpdateStockChart(stock.name.clone()))

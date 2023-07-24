@@ -2,7 +2,6 @@
 use crate::common::{Msg, UserEvent};
 
 // Third party imports
-use log::debug;
 use tui_realm_stdlib::Chart;
 use tuirealm::{
     command::CmdResult,
@@ -50,7 +49,6 @@ impl StockChart {
 
 impl Component<Msg, UserEvent> for StockChart {
     fn on(&mut self, ev: Event<UserEvent>) -> Option<Msg> {
-        //debug!("{:?}", ev);
         let _ = match ev {
             Event::User(UserEvent::DataGenerated(stock_data)) => {
                 // Update data
@@ -68,9 +66,6 @@ impl Component<Msg, UserEvent> for StockChart {
                     Attribute::Dataset,
                     AttrValue::Payload(PropPayload::Vec(vec![PropValue::Dataset(dataset)])),
                 );
-                if let Some(attrval) = self.query(Attribute::Dataset) {
-                    debug! {"{:?}", attrval};
-                }
                 CmdResult::None
             }
             _ => CmdResult::None,

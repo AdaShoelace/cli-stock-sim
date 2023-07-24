@@ -1,11 +1,19 @@
 //Crate imports
-use crate::{common::{Id, UserEvent}, common_components, util::popup};
-use super::{StockOverview, components};
+use super::{components, StockOverview};
+use crate::{
+    common::{Id, UserEvent},
+    common_components,
+    util::popup,
+};
 
 // Third party imports
 use log::{debug, error};
 use tuirealm::{
-    tui::{layout::{Constraint, Direction, Layout}, widgets::Clear},
+    event::{Key, KeyEvent, KeyModifiers},
+    tui::{
+        layout::{Constraint, Direction, Layout},
+        widgets::Clear,
+    },
     Sub, SubClause, SubEventClause,
 };
 
@@ -13,26 +21,42 @@ impl StockOverview {
     pub(super) fn init(&mut self) {
         assert!(self
             .app
-            .remount(Id::TitleBar, Box::new(common_components::TitleBar::default()), vec![
-                Sub::new(SubEventClause::Any, SubClause::Always)
-            ])
-            .is_ok()
-        );
+            .remount(
+                Id::GlobalListener,
+                Box::new(common_components::GlobalListener::default()),
+                vec![Sub::new(
+                    SubEventClause::Keyboard(KeyEvent {
+                        code: Key::Esc,
+                        modifiers: KeyModifiers::NONE
+                    }),
+                    SubClause::Always
+                )]
+            )
+            .is_ok());
+        assert!(self
+            .app
+            .remount(
+                Id::TitleBar,
+                Box::new(common_components::TitleBar::default()),
+                vec![Sub::new(SubEventClause::Any, SubClause::Always)]
+            )
+            .is_ok());
         assert!(self
             .app
             .remount(Id::Header, Box::new(components::Header::default()), vec![])
             .is_ok());
-        debug!("Header mounted");
 
         assert!(self
             .app
             .remount(
                 Id::StockList,
                 Box::new(components::StockList::default()),
-                vec![Sub::new(SubEventClause::User(UserEvent::Init), SubClause::Always)]
+                vec![Sub::new(
+                    SubEventClause::User(UserEvent::Init),
+                    SubClause::Always
+                )]
             )
             .is_ok());
-        debug!("StockOverview mounted");
 
         assert!(self
             .app
@@ -42,9 +66,7 @@ impl StockOverview {
                 vec![Sub::new(SubEventClause::Any, SubClause::Always)]
             )
             .is_ok());
-        debug!("StockChart mounted");
         assert!(self.app.active(&Id::Header).is_ok());
-        debug!("Header active");
 
         _ = self.tx.send(UserEvent::Init);
     }
@@ -74,26 +96,20 @@ impl StockOverview {
             self.app.view(&Id::StockChart, f, chunks[3]);
 
             if self.app.mounted(&Id::ExitPopUp) {
-                let pop = popup::Popup(popup::Size::Percentage(50), popup::Size::Percentage(20)).draw_in(f.size());
+                let pop = popup::Popup(popup::Size::Percentage(50), popup::Size::Percentage(20))
+                    .draw_in(f.size());
                 f.render_widget(Clear, pop);
 
                 let _popup_chunks = Layout::default()
                     .direction(Direction::Vertical)
-                    .constraints(
-                        [
-                            Constraint::Percentage(50),
-                            Constraint::Percentage(50),
-                        ]
-                        .as_ref()
-                    ).split(pop);
+                    .constraints([Constraint::Percentage(50), Constraint::Percentage(50)].as_ref())
+                    .split(pop);
                 self.app.view(&Id::ExitPopUp, f, pop);
                 if let Some(&Id::ExitPopUp) = self.app.focus() {
-            
                 } else {
                     assert!(self.app.active(&Id::ExitPopUp).is_ok());
                 }
             }
-
         });
 
         if let Err(err) = res {

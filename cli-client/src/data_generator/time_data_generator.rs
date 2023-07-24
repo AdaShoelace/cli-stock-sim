@@ -5,7 +5,7 @@ use crate::common::UserEvent;
 use std::{sync::mpsc::{Receiver, channel}, thread, time};
 
 // Third party imports
-use log::{debug, error};
+use log::error;
 use simple_ntp::sntp;
 use tuirealm::{
     listener::{ListenerResult, Poll},
@@ -40,7 +40,6 @@ impl Default for TimeDataGenerator {
 impl Poll<UserEvent> for TimeDataGenerator {
     fn poll(&mut self) -> ListenerResult<Option<Event<UserEvent>>> {
         let res = if let Ok(dur) = self.rx.try_recv() {
-            debug!("Time: {:?}", dur);
             if let Ok(dur) = dur {
                 Some(Event::User(UserEvent::TimeTick(dur.as_secs() as i64)))
             } else {

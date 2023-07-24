@@ -3,7 +3,10 @@ mod update;
 mod view;
 
 use super::{Activity, Context, ExitReason};
-use crate::{data_generator::{MockDataGenerator, TimeDataGenerator}, Id, Msg, UserEvent};
+use crate::{
+    data_generator::{MockDataGenerator, TimeDataGenerator},
+    Id, Msg, UserEvent,
+};
 
 // std imports
 use std::{
@@ -37,7 +40,10 @@ impl StockOverview {
                         Box::new(MockDataGenerator::new((0.0, 0.0), (50.0, 35.0), rx)),
                         Duration::from_secs(1),
                     )
-                    .port(Box::new(TimeDataGenerator::default()), Duration::from_secs(5)),
+                    .port(
+                        Box::new(TimeDataGenerator::default()),
+                        Duration::from_secs(5),
+                    ),
             ),
             exit_reason: None,
             context: None,
@@ -74,7 +80,6 @@ impl Activity for StockOverview {
         if let Err(err) = self.context.as_mut().unwrap().terminal().enable_raw_mode() {
             error!("Failed to enable raw mode: {}", err);
         }
-
         self.init();
         self.app.unlock_subs();
 

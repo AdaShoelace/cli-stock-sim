@@ -21,10 +21,12 @@ impl Update<Msg> for StockOverview {
                 None
             }
             Msg::OpenExitPopUp => {
+                self.app.lock_subs();
                 assert!(self.app.mount(Id::ExitPopUp, Box::new(ExitPopUp::default()), vec![]).is_ok());
                 None
             }
             Msg::CloseExitPopUp => {
+                self.app.unlock_subs();
                 assert!(self.app.umount(&Id::ExitPopUp).is_ok());
                 None
             }

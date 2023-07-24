@@ -6,7 +6,6 @@ use crate::common::UserEvent;
 use std::{collections::HashMap, sync::mpsc::Receiver};
 
 // Third party imports
-use log::debug;
 use rand::{thread_rng, Rng};
 use tuirealm::{
     listener::{ListenerResult, Poll},
@@ -46,7 +45,6 @@ impl MockDataGenerator {
     }
 
     pub fn generate(&mut self) {
-        debug!("In generate");
         for stock_data in self.data.values_mut() {
             let y_max = self.max.1;
             let y_min = self.min.1;
@@ -66,7 +64,6 @@ impl MockDataGenerator {
 
 impl Poll<UserEvent> for MockDataGenerator {
     fn poll(&mut self) -> ListenerResult<Option<Event<UserEvent>>> {
-        debug!("User event");
         self.generate();
 
         match self.rx.try_recv() {

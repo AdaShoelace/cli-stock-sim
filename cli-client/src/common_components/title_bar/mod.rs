@@ -8,7 +8,6 @@ use time_label::TimeLabel;
 
 // Third party imports
 use chrono::{Utc, prelude::*};
-use log::debug;
 use tui_realm_stdlib::{Container, Label};
 use tuirealm::{
     props::{Alignment, BorderSides, Borders, Color, Layout},
@@ -62,7 +61,6 @@ impl Component<Msg, UserEvent> for TitleBar {
                 } else {
                     format!("Time Error")
                 };
-                debug!("Time string: {}", time_string);
                 self.component.children[2].attr(Attribute::Text, AttrValue::String(time_string));
             },
             _ => {}

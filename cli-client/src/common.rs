@@ -32,6 +32,7 @@ pub enum Msg {
 pub enum Id {
     ExitPopUp,
     Header,
+    GlobalListener,
     Label,
     LetterCounter,
     Login,
