@@ -1,5 +1,5 @@
 // Crate imports
-use crate::common::{ActivityId, Msg, UserEvent};
+use crate::common::{Msg, UserEvent};
 
 // Third party imports
 use tuirealm::{
@@ -58,11 +58,6 @@ impl Component<Msg, UserEvent> for Header {
                 code: Key::Tab,
                 modifiers: KeyModifiers::NONE,
             }) => return Some(Msg::BlurHeader),
-            /*Event::Keyboard(KeyEvent { code: Key::Esc, .. })
-            | Event::Keyboard(KeyEvent {
-                code: Key::Backspace,
-                ..
-            }) => return Some(Msg::ChangeActivity(ActivityId::MainMenu)),*/
             Event::Keyboard(KeyEvent {
                 code: Key::Char('p'),
                 modifiers: KeyModifiers::NONE,

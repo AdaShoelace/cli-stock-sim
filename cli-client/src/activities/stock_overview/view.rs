@@ -7,7 +7,7 @@ use crate::{
 };
 
 // Third party imports
-use log::{debug, error};
+use log::error;
 use tuirealm::{
     event::{Key, KeyEvent, KeyModifiers},
     tui::{

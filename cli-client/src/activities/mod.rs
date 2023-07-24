@@ -1,9 +1,8 @@
 mod login;
-mod main_menu;
 mod stock_overview;
 
 // Crate imports
-pub use self::{login::Login, main_menu::MainMenu, stock_overview::StockOverview};
+pub use self::{login::Login, stock_overview::StockOverview};
 use super::context::Context;
 
 // Third party imports
@@ -11,7 +10,6 @@ use strum::{Display, EnumString};
 
 #[derive(EnumString, Display)]
 pub enum ExitReason {
-    EnterMainMenu,
     EnterStockOverview,
     Quit,
 }

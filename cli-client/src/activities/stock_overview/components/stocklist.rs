@@ -1,5 +1,5 @@
 // Crate imports
-use crate::{common::{ActivityId, Msg, UserEvent, mock}, models::Stocks};
+use crate::{common::{Msg, UserEvent, mock}, models::Stocks};
 
 // Third party imports
 use tuirealm::{

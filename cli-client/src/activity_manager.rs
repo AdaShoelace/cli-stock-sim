@@ -1,5 +1,5 @@
 // Crate imports
-use crate::{activities::{Activity, ExitReason, MainMenu, StockOverview, Login}, context::Context};
+use crate::{activities::{Activity, ExitReason, StockOverview, Login}, context::Context};
 
 // Std imports
 use std::time::Duration;
@@ -10,7 +10,6 @@ use log::{debug, error, info};
 
 pub enum NextActivity {
     Login,
-    MainMenu,
     StockOverview
 }
 
@@ -29,7 +28,6 @@ impl ActivityManager {
             current_activity = match current_activity {
                 Some(activity) => match activity {
                     NextActivity::Login => self.run_login(),
-                    NextActivity::MainMenu => self.run_main_menu(),
                     NextActivity::StockOverview => self.run_stock_overview()
                 },
                 None => break
@@ -61,12 +59,11 @@ impl ActivityManager {
                         result = None;
                         break;
                     }
-                    ExitReason::EnterMainMenu => {
+                    ExitReason::EnterStockOverview => {
                         info!("Leaving Login for StockOverview due to: {}", exit_reason);
-                        result = Some(NextActivity::MainMenu);
+                        result = Some(NextActivity::StockOverview);
                         break;
                     }
-                    _ => {}
                 }
             }
         }
@@ -74,44 +71,6 @@ impl ActivityManager {
         info!("Login acitivity destroyed");
         result
 
-    }
-
-    fn run_main_menu(&mut self) -> Option<NextActivity> {
-        let mut activity = MainMenu::new(Duration::from_millis(20));
-        
-        let result: Option<NextActivity>;
-        
-        let ctx = match self.context.take() {
-            Some(ctx) => ctx,
-            None => {
-                error!("Failed to initialize MainMenu activity: context is None");
-                return None
-            }
-        };
-
-        activity.on_create(ctx);
-        loop {
-            activity.on_draw();
-
-            if let Some(exit_reason) = activity.on_umount() {
-                match exit_reason {
-                    ExitReason::Quit => {
-                        info!("MainMenu activity terminated due to {}", exit_reason);
-                        result = None;
-                        break;
-                    }
-                    ExitReason::EnterStockOverview => {
-                        info!("Leaving MainMenu for StockOverview due to: {}", exit_reason);
-                        result = Some(NextActivity::StockOverview);
-                        break;
-                    }
-                    _ => {}
-                }
-            }
-        }
-        self.context = activity.on_destroy();
-        info!("MainMenu acitivity destroyed");
-        result
     }
 
     fn run_stock_overview(&mut self) -> Option<NextActivity> {
@@ -136,11 +95,6 @@ impl ActivityManager {
                     ExitReason::Quit => {
                         info!("StockOverview activity terminated due to {}", exit_reason);
                         result = None;
-                        break;
-                    }
-                    ExitReason::EnterMainMenu => {
-                        info!("Leaving StockOverview for MainMenu due to: {}", exit_reason);
-                        result = Some(NextActivity::MainMenu);
                         break;
                     }
                     _ => {}
