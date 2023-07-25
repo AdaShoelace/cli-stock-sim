@@ -110,3 +110,18 @@ CREATE OR REPLACE TRIGGER update_updated_on_industries
 
 ------------------------------------------------------------------
 
+-- View: public.stock_view
+
+-- DROP VIEW public.stock_view;
+
+CREATE OR REPLACE VIEW public.stock_view
+ AS
+ SELECT stocks.name,
+    stocks.industry_id,
+    industries.name AS industry_name
+   FROM stocks
+     LEFT JOIN industries ON stocks.industry_id = industries.id::bigint;
+
+ALTER TABLE public.stock_view
+    OWNER TO "stock-dev-user";
+
