@@ -38,7 +38,7 @@ impl StockOverview {
                     .tick_interval(Duration::from_secs(1))
                     .port(
                         Box::new(MockDataGenerator::new((0.0, 0.0), (50.0, 35.0), rx)),
-                        Duration::from_secs(1),
+                        Duration::from_millis(400),
                     )
                     .port(
                         Box::new(TimeDataGenerator::default()),
