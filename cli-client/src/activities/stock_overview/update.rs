@@ -34,10 +34,6 @@ impl Update<Msg> for StockOverview {
                 self.exit_reason = Some(ExitReason::Quit);
                 None
             }
-            /*Msg::ChangeActivity(ActivityId::MainMenu) => {
-                self.exit_reason = Some(ExitReason::EnterMainMenu);
-                None
-            }*/
             Msg::UpdateStockChart(name) => {
                 _ = self.tx.send(UserEvent::CurrentStockChanged(name));
                 None

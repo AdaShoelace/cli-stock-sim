@@ -96,15 +96,15 @@ impl StockOverview {
             self.app.view(&Id::StockChart, f, chunks[3]);
 
             if self.app.mounted(&Id::ExitPopUp) {
-                let pop = popup::Popup(popup::Size::Percentage(50), popup::Size::Percentage(20))
+                let pop_rect = popup::Popup(popup::Size::Percentage(50), popup::Size::Percentage(20))
                     .draw_in(f.size());
-                f.render_widget(Clear, pop);
+                f.render_widget(Clear, pop_rect);
 
                 let _popup_chunks = Layout::default()
                     .direction(Direction::Vertical)
                     .constraints([Constraint::Percentage(50), Constraint::Percentage(50)].as_ref())
-                    .split(pop);
-                self.app.view(&Id::ExitPopUp, f, pop);
+                    .split(pop_rect);
+                self.app.view(&Id::ExitPopUp, f, pop_rect);
                 if let Some(&Id::ExitPopUp) = self.app.focus() {
                 } else {
                     assert!(self.app.active(&Id::ExitPopUp).is_ok());
