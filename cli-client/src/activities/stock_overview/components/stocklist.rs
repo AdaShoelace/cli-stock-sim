@@ -1,11 +1,17 @@
 // Crate imports
-use crate::{common::{Msg, UserEvent, mock}, models::Stocks};
+use crate::{
+    common::{mock, Msg, UserEvent},
+    models::Stocks,
+};
 
 // Third party imports
 use tuirealm::{
     command::{Cmd, CmdResult, Direction},
     event::{Key, KeyEvent, KeyModifiers},
-    props::{Attribute, AttrValue, Alignment, BorderType, Borders, Color, TableBuilder, TextModifiers, TextSpan},
+    props::{
+        Alignment, AttrValue, Attribute, BorderType, Borders, Color, TableBuilder, TextModifiers,
+        TextSpan,
+    },
     Component, Event, MockComponent, State, StateValue,
 };
 
@@ -26,8 +32,8 @@ impl Default for StockList {
                 .background(Color::Reset)
                 .borders(
                     Borders::default()
-                    .color(Color::LightGreen)
-                    .modifiers(BorderType::Rounded),
+                        .color(Color::LightGreen)
+                        .modifiers(BorderType::Rounded),
                 )
                 .foreground(Color::LightGreen)
                 .modifiers(TextModifiers::BOLD)
@@ -57,7 +63,7 @@ impl Default for StockList {
 
                     tb.build()
                 })
-            .selected_line(0),
+                .selected_line(0),
             stocks,
         };
 
@@ -67,7 +73,10 @@ impl Default for StockList {
             String::new()
         };
 
-        ret.attr(Attribute::Custom("CurrentStockName"), AttrValue::String(stock_name));
+        ret.attr(
+            Attribute::Custom("CurrentStockName"),
+            AttrValue::String(stock_name),
+        );
         ret
     }
 }
@@ -87,12 +96,10 @@ impl Component<Msg, UserEvent> for StockList {
                 code: Key::Up,
                 modifiers: KeyModifiers::NONE,
             })
-
             | Event::Keyboard(KeyEvent {
                 code: Key::Char('k'),
                 modifiers: KeyModifiers::NONE,
-            })
-            => self.perform(Cmd::Move(Direction::Up)),
+            }) => self.perform(Cmd::Move(Direction::Up)),
             Event::Keyboard(KeyEvent {
                 code: Key::Down,
                 modifiers: KeyModifiers::SHIFT,
@@ -105,21 +112,28 @@ impl Component<Msg, UserEvent> for StockList {
                 code: Key::Tab,
                 modifiers: KeyModifiers::NONE,
             }) => return Some(Msg::BlurStockList),
+            Event::Keyboard(KeyEvent {
+                code: Key::Enter,
+                modifiers: KeyModifiers::NONE,
+            }) => return Some(Msg::OpenBuyPopUp),
             Event::User(UserEvent::Init) => {
                 if let Some(stock) = self.stocks.get(0) {
-                    return Some(Msg::UpdateStockChart(stock.name.clone()))
+                    return Some(Msg::UpdateStockChart(stock.name.clone()));
                 } else {
                     CmdResult::None
                 }
             }
-                _ => CmdResult::None,
+            _ => CmdResult::None,
         };
 
         match cmd_res {
             CmdResult::Changed(State::One(StateValue::Usize(index))) => {
                 if let Some(stock) = self.stocks.get(index) {
                     let ret = Some(Msg::UpdateStockChart(stock.name.clone()));
-                    self.attr(Attribute::Custom("CurrentStockName"), AttrValue::String(stock.name.clone()));
+                    self.attr(
+                        Attribute::Custom("CurrentStockName"),
+                        AttrValue::String(stock.name.clone()),
+                    );
                     return ret;
                 }
             }

@@ -95,21 +95,26 @@ impl StockOverview {
             self.app.view(&Id::StockList, f, chunks[2]);
             self.app.view(&Id::StockChart, f, chunks[3]);
 
-            if self.app.mounted(&Id::ExitPopUp) {
-                let pop_rect = popup::Popup(popup::Size::Percentage(50), popup::Size::Percentage(20))
-                    .draw_in(f.size());
-                f.render_widget(Clear, pop_rect);
+            let popups = [Id::ExitPopUp, Id::BuyPopUp];
+            popups.iter().for_each(|id| {
+                if self.app.mounted(id) {
+                    let pop_rect =
+                        popup::Popup(popup::Size::Percentage(50), popup::Size::Percentage(20))
+                            .draw_in(f.size());
+                    f.render_widget(Clear, pop_rect);
 
-                let _popup_chunks = Layout::default()
-                    .direction(Direction::Vertical)
-                    .constraints([Constraint::Percentage(50), Constraint::Percentage(50)].as_ref())
-                    .split(pop_rect);
-                self.app.view(&Id::ExitPopUp, f, pop_rect);
-                if let Some(&Id::ExitPopUp) = self.app.focus() {
-                } else {
-                    assert!(self.app.active(&Id::ExitPopUp).is_ok());
+                    let _popup_chunks = Layout::default()
+                        .direction(Direction::Vertical)
+                        .constraints(
+                            [Constraint::Percentage(50), Constraint::Percentage(50)].as_ref(),
+                        )
+                        .split(pop_rect);
+                    self.app.view(id, f, pop_rect);
+                    if self.app.focus() != Some(id) {
+                        assert!(self.app.active(id).is_ok());
+                    }
                 }
-            }
+            });
         });
 
         if let Err(err) = res {

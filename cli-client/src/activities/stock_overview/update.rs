@@ -3,7 +3,7 @@ use crate::{
     activities::{ExitReason, StockOverview},
     common::{Id, Msg, UserEvent},
 };
-use super::components::ExitPopUp;
+use super::components::{BuyPopUp, ExitPopUp};
 
 // Third party imports
 use tuirealm::Update;
@@ -28,6 +28,16 @@ impl Update<Msg> for StockOverview {
             Msg::CloseExitPopUp => {
                 self.app.unlock_subs();
                 assert!(self.app.umount(&Id::ExitPopUp).is_ok());
+                None
+            }
+            Msg::OpenBuyPopUp => {
+                self.app.lock_subs();
+                assert!(self.app.mount(Id::BuyPopUp, Box::new(BuyPopUp::default()), vec![]).is_ok());
+                None
+            }
+            Msg::CloseBuyPopUp => {
+                self.app.unlock_subs();
+                assert!(self.app.umount(&Id::BuyPopUp).is_ok());
                 None
             }
             Msg::AppClose => {

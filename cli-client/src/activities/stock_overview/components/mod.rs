@@ -4,6 +4,6 @@ mod stock_chart;
 mod stocklist;
 
 pub use header::Header;
-pub use popup::ExitPopUp;
+pub use popup::{BuyPopUp, ExitPopUp};
 pub use stock_chart::StockChart;
 pub use stocklist::StockList;

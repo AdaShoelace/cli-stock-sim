@@ -23,6 +23,8 @@ pub enum Msg {
     StockDataChanged,
     OpenExitPopUp,
     CloseExitPopUp,
+    OpenBuyPopUp,
+    CloseBuyPopUp,
     UpdateStockChart(String),
     None,
 }
@@ -31,6 +33,7 @@ pub enum Msg {
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum Id {
     ExitPopUp,
+    BuyPopUp,
     Header,
     GlobalListener,
     Label,
